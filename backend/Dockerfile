@@ -17,6 +17,10 @@ RUN npx prisma generate
 # Copy source code
 COPY . .
 
+# Release identity: the pipeline passes the git SHA; /version returns it
+ARG GIT_SHA=unknown
+ENV GIT_SHA=$GIT_SHA
+
 # Expose default backend port
 EXPOSE 4000
 
