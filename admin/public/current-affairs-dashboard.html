@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YuktiPrep Current Affairs Engine Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #08090d;
+            --card-bg: rgba(18, 20, 29, 0.6);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-purple: #8b5cf6;
+            --accent-blue: #3b82f6;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --glow-purple: rgba(139, 92, 246, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 5% 15%, rgba(59, 130, 246, 0.07) 0%, transparent 35%),
+                radial-gradient(circle at 95% 75%, rgba(139, 92, 246, 0.07) 0%, transparent 35%);
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.35);
+        }
+
+        .logo-title h1 {
+            font-size: 1.9rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-title p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 1px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: white;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
+        }
+
+        .btn:disabled {
+            background: #27273a;
+            box-shadow: none;
+            cursor: not-allowed;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-emerald);
+        }
+
+        /* Stats KPI Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-purple), var(--accent-blue));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+
+        .stat-card h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 0.6rem;
+            letter-spacing: 0.08em;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 2.3rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation Tabs */
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6px;
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 11px 20px;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tab-btn.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Current Affairs Content layout */
+        .articles-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .article-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.75rem;
+            backdrop-filter: blur(16px);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .article-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .article-title {
+            font-size: 1.4rem;
+            line-height: 1.35;
+            color: white;
+            letter-spacing: -0.01em;
+        }
+
+        /* SVG Radial Dials */
+        .dials-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .radial-score-container {
+            position: relative;
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .radial-ring-fill {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.8s ease-out;
+        }
+
+        .radial-score-value {
+            position: absolute;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .radial-score-label {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: -2px;
+        }
+
+        /* Badges */
+        .badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .badge-theme {
+            background: rgba(139, 92, 246, 0.1);
+            color: #d8b4fe;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .badge-exam {
+            background: rgba(245, 158, 11, 0.08);
+            color: #fef08a;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        /* Nested Tabs inside Article Cards */
+        .article-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            gap: 1.5rem;
+        }
+
+        .article-tab-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding-bottom: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .article-tab-btn:hover {
+            color: white;
+        }
+
+        .article-tab-btn.active {
+            color: var(--accent-purple);
+        }
+
+        .article-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-purple);
+            box-shadow: 0 0 10px var(--accent-purple);
+        }
+
+        .article-tab-content {
+            display: none;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: #e5e7eb;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .article-tab-content.active {
+            display: block;
+        }
+
+        .article-summary-text {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 3px solid var(--accent-purple);
+            font-size: 0.95rem;
+        }
+
+        .syllabus-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.01);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .prep-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .prep-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .source-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .source-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .source-link:hover {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+
+        /* 3D Flip Cards for Expected Questions */
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 18px;
+            color: white;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+        }
+
+        .select-filter {
+            background: #10111a;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 18px;
+            color: white;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .select-filter:focus {
+            border-color: var(--accent-purple);
+        }
+
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 480px) {
+            .questions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .question-card-container {
+            perspective: 1000px;
+            height: 250px;
+        }
+
+        .question-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: left;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .question-card-container.flipped .question-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .question-card-front, .question-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .question-card-front:hover, .question-card-back:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .question-card-back {
+            transform: rotateY(180deg);
+            background: rgba(16, 185, 129, 0.03);
+            border-color: rgba(16, 185, 129, 0.15);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .question-exam-tag {
+            font-size: 0.75rem;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.15));
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            color: #d8b4fe;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: white;
+            font-weight: 500;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .flip-prompt {
+            font-size: 0.78rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .question-answer-body {
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: #e5e7eb;
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-emerald);
+        }
+
+        /* Themes grid */
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .theme-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 190px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-title h3 {
+            font-size: 1.25rem;
+            color: white;
+            line-height: 1.35;
+        }
+
+        .theme-stats {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 0.85rem;
+            font-size: 0.9rem;
+        }
+
+        .theme-stat-item {
+            text-align: center;
+        }
+
+        .theme-stat-label {
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            font-weight: 500;
+        }
+
+        .theme-stat-val {
+            font-weight: 700;
+            color: white;
+            font-size: 1.15rem;
+        }
+
+        /* Source Health Grid */
+        .health-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .health-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 1.35rem;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        .health-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.85rem;
+        }
+
+        .health-name {
+            font-weight: 600;
+            color: white;
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+        }
+
+        .health-pct {
+            font-weight: 800;
+            font-size: 1.15rem;
+        }
+
+        .pct-green { color: var(--accent-emerald); }
+        .pct-yellow { color: var(--accent-amber); }
+        .pct-red { color: var(--accent-rose); }
+
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.04);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.85rem;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bg-green { background-color: var(--accent-emerald); box-shadow: 0 0 8px rgba(16, 185, 129, 0.5); }
+        .bg-yellow { background-color: var(--accent-amber); box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
+        .bg-red { background-color: var(--accent-rose); box-shadow: 0 0 8px rgba(244, 63, 94, 0.5); }
+
+        .health-footer {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Dead Letters table & JSON formatter */
+        .errors-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        .errors-table-container {
+            overflow-x: auto;
+        }
+
+        .errors-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .errors-table th {
+            padding: 14px 16px;
+            border-bottom: 2px solid var(--card-border);
+            color: white;
+            font-weight: 600;
+        }
+
+        .errors-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+
+        .errors-table tr:hover td {
+            color: white;
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .error-reason {
+            color: #f43f5e;
+            font-family: 'Inter', sans-serif;
+            background: rgba(244, 63, 94, 0.06);
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(244, 63, 94, 0.15);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .json-payload-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .json-payload-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .json-payload-drawer {
+            display: none;
+            background: #040507;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #a5f3fc;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            max-height: 250px;
+        }
+
+        /* Loading Overlay Spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .syncing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(4, 5, 8, 0.85);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .syncing-overlay .spinner {
+            width: 58px;
+            height: 58px;
+            border-width: 4px;
+            border-top-color: var(--accent-purple);
+        }
+
+        .syncing-overlay h2 {
+            font-size: 1.6rem;
+            color: white;
+            letter-spacing: 0.02em;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            background: rgba(255,255,255,0.01);
+        }
+
+        /* Disclaimer box styling */
+        .disclaimer-box {
+            margin-top: 4rem;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 1.5rem;
+            font-size: 0.82rem;
+            line-height: 1.55;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .disclaimer-box strong {
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* CSS Print Stylesheet */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                background-image: none !important;
+            }
+            .container {
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+            header, .stats-grid, .tabs-nav, .filter-bar, .controls, .btn, #sync-btn, .answer-toggle-btn, .article-tabs, .dials-group, .flip-prompt {
+                display: none !important;
+            }
+            .tab-panel {
+                display: none !important;
+            }
+            .tab-panel.active {
+                display: block !important;
+            }
+            .article-card {
+                background: transparent !important;
+                border: none !important;
+                border-bottom: 1px solid #ccc !important;
+                page-break-inside: avoid;
+                padding: 1.5rem 0 !important;
+                box-shadow: none !important;
+            }
+            .article-summary-text {
+                background: #f8fafc !important;
+                border-left: 3px solid #7c3aed !important;
+                color: black !important;
+                padding-left: 10px !important;
+            }
+            .article-tab-content {
+                display: block !important;
+                margin-top: 10px !important;
+                color: black !important;
+            }
+            .badge {
+                border: 1px solid #ccc !important;
+                color: black !important;
+                background: none !important;
+            }
+            .disclaimer-box {
+                border: 1px solid #ccc !important;
+                color: #555 !important;
+                background: none !important;
+                page-break-inside: avoid;
+            }
+            .disclaimer-box strong {
+                color: black !important;
+            }
+            /* Print expected questions layout */
+            .questions-grid {
+                display: block !important;
+            }
+            .question-card-container {
+                height: auto !important;
+                page-break-inside: avoid;
+                margin-bottom: 2rem !important;
+                border-bottom: 1px solid #ccc !important;
+                padding-bottom: 1rem !important;
+            }
+            .question-card-inner {
+                transform: none !important;
+            }
+            .question-card-front {
+                position: relative !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
+            .question-card-back {
+                position: relative !important;
+                transform: none !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                display: block !important;
+                margin-top: 10px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Gradient definitions for SVG score dials -->
+    <svg style="width:0; height:0; position:absolute;" aria-hidden="true" focusable="false">
+        <defs>
+            <linearGradient id="score-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#a78bfa" />
+                <stop offset="100%" stop-color="#3b82f6" />
+            </linearGradient>
+            <linearGradient id="conf-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#3b82f6" />
+                <stop offset="100%" stop-color="#10b981" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header>
+            <div class="logo-area">
+                <div class="logo-icon">Y</div>
+                <div class="logo-title">
+                    <h1>YuktiPrep CA Engine</h1>
+                    <p>Official-Source-First Competitive Affairs Dashboard</p>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="status-badge" id="server-status">Server Online</div>
+                <button class="btn btn-outline" onclick="window.print()">
+                    Export PDF / Print
+                </button>
+                <button class="btn" id="sync-btn" onclick="triggerSync()">
+                    Sync Sources
+                </button>
+            </div>
+        </header>
+
+        <!-- KPI Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Extracted Events</h3>
+                <div class="stat-value" id="kpi-items">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Average Relevance Score</h3>
+                <div class="stat-value" id="kpi-score">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Monitor Success Rate</h3>
+                <div class="stat-value" id="kpi-rate">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Dead Letter Queue</h3>
+                <div class="stat-value" id="kpi-dlq">-</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('daily')">Daily Current Affairs</button>
+            <button class="tab-btn" onclick="switchTab('weekly')">Weekly Digest</button>
+            <button class="tab-btn" onclick="switchTab('monthly')">Monthly Archives</button>
+            <button class="tab-btn" onclick="switchTab('questions')">Expected Questions</button>
+            <button class="tab-btn" onclick="switchTab('themes')">Theme Analytics</button>
+            <button class="tab-btn" onclick="switchTab('health')">Source Health</button>
+            <button class="tab-btn" onclick="switchTab('errors')">Dead Letters</button>
+        </div>
+
+        <!-- Daily Panel -->
+        <div id="daily" class="tab-panel active">
+            <div class="articles-list" id="daily-list"></div>
+        </div>
+
+        <!-- Weekly Panel -->
+        <div id="weekly" class="tab-panel">
+            <div class="articles-list" id="weekly-list"></div>
+        </div>
+
+        <!-- Monthly Panel -->
+        <div id="monthly" class="tab-panel">
+            <h2 id="monthly-label" style="margin-bottom: 1.5rem; font-size: 1.5rem; color: white;"></h2>
+            <div class="articles-list" id="monthly-list"></div>
+        </div>
+
+        <!-- questions Panel -->
+        <div id="questions" class="tab-panel">
+            <div class="filter-bar">
+                <input type="text" class="search-input" id="search-q" placeholder="Search questions by keyword..." oninput="filterQuestions()">
+                <select class="select-filter" id="filter-exam" onchange="filterQuestions()">
+                    <option value="all">All Exams</option>
+                    <option value="UPSC">UPSC / State PCS</option>
+                    <option value="Banking">Banking / Regulatory</option>
+                    <option value="SSC">SSC / Railway</option>
+                </select>
+            </div>
+            <div class="questions-grid" id="questions-list"></div>
+        </div>
+
+        <!-- Themes Panel -->
+        <div id="themes" class="tab-panel">
+            <div class="themes-grid" id="themes-list"></div>
+        </div>
+
+        <!-- Health Panel -->
+        <div id="health" class="tab-panel">
+            <div class="health-grid" id="health-list"></div>
+        </div>
+
+        <!-- Errors Panel -->
+        <div id="errors" class="tab-panel">
+            <div class="errors-panel">
+                <div class="errors-table-container">
+                    <table class="errors-table">
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th>Stage</th>
+                                <th>Reason</th>
+                                <th>Payload Summary</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="errors-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disclaimer Box -->
+        <div class="disclaimer-box">
+            <strong>Professional Disclaimer</strong>
+            YuktiPrep's engine and generated material are educational tools for competitive-examination preparation. "Expected questions" represent preparation priorities, not guaranteed predictions. Current affairs, official statistics, judgments, schemes, regulations, recruitment information and examination requirements must be cross-verified against the relevant official notification, judgment or authoritative institutional source. The system does not replace official instructions, institutional advice, expert counseling, or professional/legal advice.
+        </div>
+
+    </div>
+
+    <!-- Sync overlay spinner -->
+    <div class="syncing-overlay" id="syncing-overlay">
+        <div class="spinner"></div>
+        <h2>Synchronizing Feeds</h2>
+        <p style="color: var(--text-secondary)">Querying official feeds, resolving dates, and analyzing relevance...</p>
+    </div>
+
+    <script>
+        let questionsCache = [];
+
+        window.onload = function() {
+            loadKPIs();
+            loadTabData('daily');
+        };
+
+        function loadKPIs() {
+            fetch('/api/current-affairs/kpis')
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('kpi-items').innerText = data.total_items;
+                    document.getElementById('kpi-score').innerText = data.avg_score + '/100';
+                    document.getElementById('kpi-rate').innerText = data.success_rate + '%';
+                    document.getElementById('kpi-dlq').innerText = data.dead_letters_count;
+                })
+                .catch(e => console.error('Error loading KPIs', e));
+        }
+
+        function triggerSync() {
+            const overlay = document.getElementById('syncing-overlay');
+            const syncBtn = document.getElementById('sync-btn');
+
+            overlay.style.display = 'flex';
+            syncBtn.disabled = true;
+
+            fetch('/api/current-affairs/sync', { method: 'POST' })
+                .then(r => r.json())
+                .then(res => {
+                    overlay.style.display = 'none';
+                    syncBtn.disabled = false;
+                    loadKPIs();
+                    const activeTabBtn = document.querySelector('.tab-btn.active');
+                    const activeTab = activeTabBtn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    loadTabData(activeTab);
+                })
+                .catch(e => {
+                    overlay.style.display = 'none';
+                    syncBtn.disabled = false;
+                    alert('Sync failed: ' + e.message);
+                });
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            loadTabData(tabId);
+        }
+
+        function loadTabData(tabId) {
+            const listEl = document.getElementById(`${tabId}-list`);
+            if (listEl && tabId !== 'questions') {
+                listEl.innerHTML = '<div class="no-data"><div class="spinner" style="margin-bottom: 10px;"></div><p>Fetching content...</p></div>';
+            }
+
+            fetch(`/api/current-affairs/${tabId}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (tabId === 'daily') renderArticles(data, 'daily-list');
+                    if (tabId === 'weekly') renderArticles(data, 'weekly-list');
+                    if (tabId === 'monthly') {
+                        document.getElementById('monthly-label').innerText = data.month_label + ' Archives';
+                        renderArticles(data.items, 'monthly-list');
+                    }
+                    if (tabId === 'questions') {
+                        questionsCache = data;
+                        renderQuestions(data);
+                    }
+                    if (tabId === 'themes') renderThemes(data);
+                    if (tabId === 'health') renderHealth(data);
+                    if (tabId === 'errors') renderErrors(data);
+                })
+                .catch(e => {
+                    if (listEl) {
+                        listEl.innerHTML = `<div class="no-data" style="color: var(--accent-rose)">Error loading data: ${e.message}</div>`;
+                    }
+                });
+        }
+
+        function switchArticleTab(btn, tabType) {
+            const card = btn.closest('.article-card');
+
+            // Toggle active button
+            card.querySelectorAll('.article-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Toggle active content panel
+            card.querySelectorAll('.article-tab-content').forEach(p => p.classList.remove('active'));
+            card.querySelector(`.article-tab-content[data-type="${tabType}"]`).classList.add('active');
+        }
+
+        function renderArticles(items, elementId) {
+            const container = document.getElementById(elementId);
+            if (!items || items.length === 0) {
+                container.innerHTML = '<div class="no-data">No records met the priority threshold for this report. Try syncing sources!</div>';
+                return;
+            }
+
+            container.innerHTML = items.map((item, index) => {
+                const exams = [];
+                if (item.prelims) exams.push('Prelims');
+                if (item.mains) exams.push('Mains');
+                if (item.pcs) exams.push('State PCS');
+                if (item.ssc) exams.push('SSC');
+                if (item.banking) exams.push('Banking');
+
+                const dasharray = 138;
+                const scoreOffset = dasharray - (dasharray * item.score / 100);
+                const confOffset = dasharray - (dasharray * item.source_confidence / 100);
+
+                return `
+                    <div class="article-card">
+                        <div class="article-header-row">
+                            <div>
+                                <h2 class="article-title">${item.title}</h2>
+                                <div class="badges-row" style="margin-top: 10px;">
+                                    <span class="badge badge-theme">${item.theme}</span>
+                                    ${exams.map(ex => `<span class="badge badge-exam">${ex}</span>`).join('')}
+                                </div>
+                            </div>
+
+                            <div class="dials-group">
+                                <!-- Priority Dial -->
+                                <div class="radial-score-container" title="YuktiPrep Priority Score">
+                                    <svg class="radial-ring" width="58" height="58">
+                                        <circle cx="29" cy="29" r="22" stroke="rgba(255,255,255,0.03)" stroke-width="4" fill="transparent"/>
+                                        <circle class="radial-ring-fill" cx="29" cy="29" r="22" stroke="url(#score-grad)" stroke-width="4" fill="transparent" 
+                                                stroke-dasharray="${dasharray}" stroke-dashoffset="${scoreOffset}" stroke-linecap="round"/>
+                                    </svg>
+                                    <div class="radial-score-value">
+                                        ${item.score}
+                                        <span class="radial-score-label">Pri</span>
+                                    </div>
+                                </div>
+
+                                <!-- Confidence Dial -->
+                                <div class="radial-score-container" title="Source Confidence Rating">
+                                    <svg class="radial-ring" width="58" height="58">
+                                        <circle cx="29" cy="29" r="22" stroke="rgba(255,255,255,0.03)" stroke-width="4" fill="transparent"/>
+                                        <circle class="radial-ring-fill" cx="29" cy="29" r="22" stroke="url(#conf-grad)" stroke-width="4" fill="transparent" 
+                                                stroke-dasharray="${dasharray}" stroke-dashoffset="${confOffset}" stroke-linecap="round"/>
+                                    </svg>
+                                    <div class="radial-score-value">
+                                        ${item.source_confidence}
+                                        <span class="radial-score-label">Conf</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nested tabs layout -->
+                        <div class="article-tabs">
+                            <button class="article-tab-btn active" onclick="switchArticleTab(this, 'summary')">Analysis</button>
+                            <button class="article-tab-btn" onclick="switchArticleTab(this, 'syllabus')">Syllabus Match</button>
+                            <button class="article-tab-btn" onclick="switchArticleTab(this, 'prep')">Prep Guide</button>
+                        </div>
+
+                        <div class="article-tab-content active" data-type="summary">
+                            <div class="article-summary-text">
+                                ${item.summary}
+                            </div>
+                        </div>
+
+                        <div class="article-tab-content" data-type="syllabus">
+                            <div class="syllabus-grid">
+                                <p style="color: white; font-weight: 600;">Theme: ${item.theme}</p>
+                                <p style="color: var(--text-secondary)">${item.static_link}</p>
+                            </div>
+                        </div>
+
+                        <div class="article-tab-content" data-type="prep">
+                            <div class="prep-grid">
+                                <div class="prep-item">
+                                    <h4 style="color: var(--accent-amber); font-size: 0.9rem; margin-bottom: 4px;">🎯 Prelims Focus</h4>
+                                    <p style="color: var(--text-secondary)">Focus on the associated institution, legal/statutory framework, mandate, key statistics, reports, conventions, and watch for common statement-based traps.</p>
+                                </div>
+                                <div class="prep-item">
+                                    <h4 style="color: var(--accent-purple); font-size: 0.9rem; margin-bottom: 4px;">✍️ Mains Focus</h4>
+                                    <p style="color: var(--text-secondary)">Analyze the institutional/policy significance, regulatory challenges, major implications for India, and formulate a balanced way forward.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="article-footer">
+                            <div class="source-meta">
+                                <span>Source: <strong>${item.source_name}</strong></span>
+                                <span>Published: <strong>${new Date(item.published_at).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'})}</strong></span>
+                            </div>
+                            <a href="${item.url}" target="_blank" class="source-link">
+                                Official Source Link &rarr;
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderQuestions(questions) {
+            const container = document.getElementById('questions-list');
+            if (!questions || questions.length === 0) {
+                container.innerHTML = '<div class="no-data">No questions found in the database.</div>';
+                return;
+            }
+
+            container.innerHTML = questions.map(q => `
+                <div class="question-card-container" onclick="this.classList.toggle('flipped')">
+                    <div class="question-card-inner">
+                        <!-- FRONT -->
+                        <div class="question-card-front">
+                            <div>
+                                <div class="question-header">
+                                    <span class="question-exam-tag">${q.exam} • ${q.question_type}</span>
+                                    <span class="badge badge-priority">Priority: ${q.priority}/100</span>
+                                </div>
+                                <div class="question-text">${q.question}</div>
+                            </div>
+                            <div class="flip-prompt">
+                                🔄 Click card to flip & reveal answer scheme
+                            </div>
+                        </div>
+                        <!-- BACK -->
+                        <div class="question-card-back">
+                            <div>
+                                <div class="question-header">
+                                    <span class="question-exam-tag" style="background: rgba(16, 185, 129, 0.08); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.2)">
+                                        Answer Scheme & Reference Basis
+                                    </span>
+                                </div>
+                                <div class="question-answer-body">
+                                    ${q.answer_basis}
+                                </div>
+                            </div>
+                            <div class="article-footer" style="padding-top: 0.5rem; margin-top: 0;">
+                                <a href="${q.source_url}" target="_blank" class="source-link" onclick="event.stopPropagation()">
+                                    Official Source Link &rarr;
+                                </a>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary)">🔄 Click to flip back</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterQuestions() {
+            const query = document.getElementById('search-q').value.toLowerCase();
+            const examFilter = document.getElementById('filter-exam').value;
+
+            const filtered = questionsCache.filter(q => {
+                const matchesQuery = q.question.toLowerCase().includes(query) || q.answer_basis.toLowerCase().includes(query);
+
+                let matchesExam = true;
+                if (examFilter !== 'all') {
+                    if (examFilter === 'UPSC') matchesExam = q.exam.includes('UPSC') || q.exam.includes('PCS');
+                    else if (examFilter === 'Banking') matchesExam = q.exam.includes('Banking') || q.exam.includes('Regulatory');
+                    else if (examFilter === 'SSC') matchesExam = q.exam.includes('SSC') || q.exam.includes('Railway');
+                }
+
+                return matchesQuery && matchesExam;
+            });
+
+            renderQuestions(filtered);
+        }
+
+        function renderThemes(themes) {
+            const container = document.getElementById('themes-list');
+            if (!themes || themes.length === 0) {
+                container.innerHTML = '<div class="no-data">No theme data found.</div>';
+                return;
+            }
+
+            container.innerHTML = themes.map(t => {
+                let grad = 'linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(59, 130, 246, 0.12))';
+                if (t.theme.includes('Economy')) grad = 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(244, 63, 94, 0.1))';
+                if (t.theme.includes('Relations')) grad = 'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.1))';
+                if (t.theme.includes('Environment')) grad = 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(245, 158, 11, 0.1))';
+                if (t.theme.includes('Science')) grad = 'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.1))';
+
+                return `
+                    <div class="theme-card" style="background: ${grad};">
+                        <div class="theme-title">
+                            <h3>${t.theme}</h3>
+                        </div>
+                        <div class="theme-stats">
+                            <div class="theme-stat-item">
+                                <div class="theme-stat-label">Items</div>
+                                <div class="theme-stat-val">${t.item_count}</div>
+                            </div>
+                            <div class="theme-stat-item">
+                                <div class="theme-stat-label">Avg Score</div>
+                                <div class="theme-stat-val">${t.avg_score}</div>
+                            </div>
+                            <div class="theme-stat-item">
+                                <div class="theme-stat-label">Max Priority</div>
+                                <div class="theme-stat-val">${t.max_score}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderHealth(health) {
+            const container = document.getElementById('health-list');
+            if (!health || health.length === 0) {
+                container.innerHTML = '<div class="no-data">No source health data found.</div>';
+                return;
+            }
+
+            container.innerHTML = health.map(h => {
+                const rate = h.success_rate;
+                let colorClass = 'pct-green';
+                let bgClass = 'bg-green';
+                if (rate < 80) { colorClass = 'pct-yellow'; bgClass = 'bg-yellow'; }
+                if (rate < 50) { colorClass = 'pct-red'; bgClass = 'bg-red'; }
+
+                return `
+                    <div class="health-card">
+                        <div class="health-header">
+                            <span class="health-name">${h.source_key.toUpperCase()}</span>
+                            <span class="health-pct ${colorClass}">${rate}%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill ${bgClass}" style="width: ${rate}%;"></div>
+                        </div>
+                        <div class="health-footer">
+                            <span>Runs: <strong>${h.runs}</strong></span>
+                            <span>Last Run: <strong>${h.last_run ? new Date(h.last_run).toLocaleDateString('en-IN') : 'Never'}</strong></span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleErrorPayload(btn) {
+            const drawer = btn.nextElementSibling;
+            if (drawer.style.display === 'block') {
+                drawer.style.display = 'none';
+                btn.innerHTML = '⚙️ View Payload';
+            } else {
+                drawer.style.display = 'block';
+                btn.innerHTML = '⚙️ Hide Payload';
+            }
+        }
+
+        function renderErrors(errors) {
+            const container = document.getElementById('errors-list');
+            if (!errors || errors.length === 0) {
+                container.innerHTML = '<tr><td colspan="5" class="no-data">No error records logged. All systems running healthy.</td></tr>';
+                return;
+            }
+
+            container.innerHTML = errors.map(err => {
+                let payloadHtml = '';
+                if (err.payload) {
+                    try {
+                        const parsed = JSON.parse(err.payload);
+                        payloadHtml = `
+                            <button class="json-payload-btn" onclick="toggleErrorPayload(this)">⚙️ View Payload</button>
+                            <div class="json-payload-drawer">${JSON.stringify(parsed, null, 2)}</div>
+                        `;
+                    } catch(e) {
+                        payloadHtml = err.payload;
+                    }
+                } else {
+                    payloadHtml = '<em style="color: var(--text-secondary);">None</em>';
+                }
+
+                return `
+                    <tr>
+                        <td><strong>${(err.source_key || 'System').toUpperCase()}</strong></td>
+                        <td><span class="badge" style="background: rgba(255, 255, 255, 0.05); color: white;">${err.stage}</span></td>
+                        <td><span class="error-reason">${err.reason}</span></td>
+                        <td>${payloadHtml}</td>
+                        <td>${new Date(err.created_at).toLocaleTimeString('en-IN')}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>

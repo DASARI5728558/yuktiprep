@@ -1,0 +1,1450 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model AdminUser {
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String    @db.VarChar(150)
+  email        String    @unique @db.VarChar(255)
+  passwordHash String
+  profilePic   String?
+  role         String    @db.VarChar(50)
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime? @db.Timestamptz
+  createdAt    DateTime  @default(now()) @db.Timestamptz
+  updatedAt    DateTime  @default(now()) @updatedAt @db.Timestamptz
+
+  auditLogs AuditLog[]
+  campaigns WhatsAppCampaign[]
+  ingestionSources IngestionSource[]
+}
+
+model TargetExamTitle {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @unique @db.VarChar(255)
+  slug      String   @unique @db.VarChar(255)
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  learnerProfiles LearnerProfile[]
+}
+
+model Exam {
+  id               String          @id @default(uuid()) @db.Uuid
+  name             String          @db.VarChar(255)
+  slug             String          @unique @db.VarChar(255)
+  shortDescription String?
+  description      String?
+  logoUrl          String?
+  isActive         Boolean         @default(true)
+  isPublished      Boolean         @default(false)
+  sortOrder        Int             @default(0)
+  createdAt        DateTime        @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+  currentAffairs   CurrentAffair[]
+  pyqs             PYQ[]
+  subjects         Subject[]
+  syllabus         Syllabus[]
+  ingestionSources IngestionSource[]
+  publishedQuestions PublishedQuestion[]
+}
+
+model Subject {
+  id             String          @id @default(uuid()) @db.Uuid
+  examId         String          @db.Uuid
+  name           String          @db.VarChar(255)
+  slug           String          @db.VarChar(255)
+  description    String?
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime        @default(now()) @updatedAt @db.Timestamptz(6)
+  currentAffairs CurrentAffair[]
+  pyqs           PYQ[]
+  exam           Exam            @relation(fields: [examId], references: [id], onDelete: Cascade)
+  syllabus       Syllabus[]
+  topics         Topic[]
+  publishedQuestions PublishedQuestion[]
+
+  @@unique([examId, slug])
+}
+
+model Topic {
+  id          String   @id @default(uuid()) @db.Uuid
+  subjectId   String   @db.Uuid
+  name        String   @db.VarChar(255)
+  slug        String   @db.VarChar(255)
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  pyqs        PYQ[]
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  publishedQuestions PublishedQuestion[]
+
+  @@unique([subjectId, slug])
+}
+
+model Syllabus {
+  id             String   @id @default(uuid()) @db.Uuid
+  examId         String   @db.Uuid
+  subjectId      String?  @db.Uuid
+  title          String   @db.VarChar(255)
+  slug           String   @db.VarChar(255)
+  content        String
+  seoTitle       String?  @db.VarChar(255)
+  seoDescription String?
+  canonicalUrl   String?
+  status         String   @default("DRAFT") @db.VarChar(50)
+  createdAt      DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  exam           Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  subject        Subject? @relation(fields: [subjectId], references: [id])
+}
+
+model PYQ {
+  id            String   @id @default(uuid()) @db.Uuid
+  examId        String   @db.Uuid
+  subjectId     String?  @db.Uuid
+  topicId       String?  @db.Uuid
+  question      String
+  questionType  String?  @db.VarChar(50)
+  options       Json?
+  correctAnswer String?
+  explanation   String?
+  year          Int?
+  paper         String?  @db.VarChar(255)
+  difficulty    String?  @db.VarChar(50)
+  source        String?
+  isPublished   Boolean  @default(false)
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  exam          Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  subject       Subject? @relation(fields: [subjectId], references: [id])
+  topic         Topic?   @relation(fields: [topicId], references: [id])
+
+  @@index([examId])
+  @@index([subjectId])
+  @@index([topicId])
+  @@index([year])
+  @@index([difficulty])
+}
+
+model CurrentAffair {
+  id             String    @id @default(uuid()) @db.Uuid
+  title          String    @db.VarChar(500)
+  slug           String    @unique @db.VarChar(500)
+  summary        String?
+  content        String
+  category       String?   @db.VarChar(255)
+  examId         String?   @db.Uuid
+  subjectId      String?   @db.Uuid
+  importance     String?   @db.VarChar(50)
+  publishedAt    DateTime? @db.Timestamptz(6)
+  lastVerifiedAt DateTime? @db.Timestamptz(6)
+  sourceName     String?   @db.VarChar(500)
+  sourceUrl      String?
+  reviewerName   String?   @db.VarChar(255)
+  aiAssistance   Boolean   @default(false)
+  status         String    @default("DRAFT") @db.VarChar(50)
+  seoTitle       String?   @db.VarChar(255)
+  seoDescription String?
+  canonicalUrl   String?
+  createdAt      DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  exam           Exam?     @relation(fields: [examId], references: [id])
+  subject        Subject?  @relation(fields: [subjectId], references: [id])
+}
+
+model SeoPage {
+  id             String   @id @default(uuid()) @db.Uuid
+  pageType       String   @db.VarChar(100)
+  title          String   @db.VarChar(500)
+  slug           String   @unique @db.VarChar(500)
+  content        String?
+  seoTitle       String?  @db.VarChar(255)
+  seoDescription String?
+  canonicalUrl   String?
+  ogTitle        String?  @db.VarChar(255)
+  ogDescription  String?
+  ogImage        String?
+  robotsIndex    Boolean  @default(true)
+  robotsFollow   Boolean  @default(true)
+  schemaType     String?  @db.VarChar(100)
+  status         String   @default("DRAFT") @db.VarChar(50)
+  createdAt      DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+}
+
+model Redirect {
+  id         String   @id @default(uuid()) @db.Uuid
+  oldPath    String   @unique
+  newPath    String
+  statusCode Int      @default(301)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model AuditLog {
+  id          String     @id @default(uuid()) @db.Uuid
+  adminUserId String?    @db.Uuid
+  action      String     @db.VarChar(100)
+  entityType  String?    @db.VarChar(100)
+  entityId    String?    @db.Uuid
+  oldData     Json?
+  newData     Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime   @default(now()) @db.Timestamptz(6)
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id])
+}
+
+model User {
+  id                    String                  @id @default(uuid()) @db.Uuid
+  phoneNumber           String?                 @unique @db.VarChar(20)
+  email                 String?                 @unique @db.VarChar(255)
+  name                  String?                 @db.VarChar(150)
+  isVerified            Boolean                 @default(false)
+  passwordHash          String?                 @db.VarChar(255)
+  role                  String?                 @default("USER") @db.VarChar(50)
+  examTargets           Json?                   @default("[]")
+  preferredTopics       Json?                   @default("[]")
+  language              String?                 @default("en") @db.VarChar(12)
+  state                 String?                 @db.VarChar(80)
+  difficulty            String?                 @default("mixed") @db.VarChar(20)
+  timezone              String?                 @default("Asia/Kolkata") @db.VarChar(64)
+  deliveryHour          Int?                    @default(7)
+  channels              Json?                   @default("[\"in_app\"]")
+  active                Boolean                 @default(true)
+  createdAt             DateTime                @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime                @default(now()) @updatedAt @db.Timestamptz(6)
+  profilePic            String?
+  learnerProfile        LearnerProfile?
+  consents              Consent[]
+  interviewSessions     Session[]
+  payments              Payment[]
+  savedJobs             SavedJob[]
+  subscriptions         Subscription[]
+  languagePreference    UserLanguagePreference?
+  whatsappConversations WhatsAppConversation[]
+  whatsappMessages      WhatsAppMessage[]
+  studyPlans            StudyPlan[]
+  aiTutorSessions       AiTutorSession[]
+
+  @@map("users")
+
+}
+
+model Language {
+  id              String                   @id @default(uuid()) @db.Uuid
+  code            String                   @unique
+  azureCode       String?                  @unique
+  englishName     String                   @db.VarChar(100)
+  nativeName      String                   @db.VarChar(100)
+  isActive        Boolean                  @default(true)
+  createdAt       DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime                 @default(now()) @updatedAt @db.Timestamptz(6)
+  userPreferences UserLanguagePreference[]
+
+  @@map("languages")
+}
+
+model UserLanguagePreference {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @unique @db.Uuid
+  languageId String   @db.Uuid
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  language   Language @relation(fields: [languageId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([languageId])
+  @@map("user_language_preferences")
+}
+
+model SavedJob {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  jobId     String
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId])
+  @@map("saved_jobs")
+}
+
+model LearnerProfile {
+  id                String           @id @default(uuid()) @db.Uuid
+  userId            String           @unique @db.Uuid
+  targetExamId      String?          @db.Uuid
+  attemptYear       Int?
+  studyHoursPerDay  Float?
+  preferredLanguage String?
+  createdAt         DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+  targetExam        TargetExamTitle? @relation(fields: [targetExamId], references: [id])
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model OtpVerification {
+  id         String    @id @default(uuid()) @db.Uuid
+  phone      String    @db.VarChar(20)
+  purpose    String    @default("LOGIN") @db.VarChar(20)
+  otpHash    String    @db.VarChar(255)
+  expiresAt  DateTime  @db.Timestamptz(6)
+  attempts   Int       @default(0)
+  verified   Boolean   @default(false)
+  verifiedAt DateTime? @db.Timestamptz(6)
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([phone])
+  @@map("otp_verifications")
+}
+
+model Item {
+  id               String            @id
+  eventKey         String            @map("event_key")
+  sourceKey        String            @map("source_key")
+  sourceName       String            @map("source_name")
+  organisation     String
+  title            String
+  summary          String
+  url              String
+  publishedAt      DateTime          @map("published_at") @db.Timestamptz(6)
+  collectedAt      DateTime          @map("collected_at") @db.Timestamptz(6)
+  theme            String
+  score            Int
+  sourceConfidence Int               @map("source_confidence")
+  prelims          Int
+  mains            Int
+  pcs              Int
+  ssc              Int
+  banking          Int
+  staticLink       String            @map("static_link")
+  itemTranslations ItemTranslation[]
+
+  @@index([publishedAt], map: "ix_items_published")
+  @@index([eventKey], map: "ix_items_event_key")
+  @@index([theme], map: "ix_items_theme")
+  @@map("items")
+}
+
+model ItemTranslation {
+  id        String            @id @default(uuid())
+  itemId    String            @map("item_id")
+  language  String            @db.VarChar(12)
+  title     String?
+  summary   String?
+  status    TranslationStatus @default(PENDING)
+  provider  String?           @db.VarChar(50)
+  attempts  Int               @default(0)
+  error     String?
+  createdAt DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  item      Item              @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, language], map: "uq_item_translation_item_language")
+  @@map("item_translations")
+}
+
+model DeadLetter {
+  id        Int      @id @default(autoincrement())
+  sourceKey String?  @map("source_key")
+  stage     String
+  reason    String
+  payload   String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("dead_letters")
+}
+
+model SourceRun {
+  id          Int       @id @default(autoincrement())
+  sourceKey   String    @map("source_key")
+  startedAt   DateTime  @map("started_at") @db.Timestamptz(6)
+  completedAt DateTime? @map("completed_at") @db.Timestamptz(6)
+  success     Boolean   @default(false)
+  httpStatus  Int?      @map("http_status")
+  foundCount  Int       @default(0) @map("found_count")
+  savedCount  Int       @default(0) @map("saved_count")
+  error       String?
+
+  @@map("source_runs")
+}
+
+model Question {
+  id           String   @id
+  eventKey     String   @map("event_key")
+  theme        String
+  exam         String
+  questionType String   @map("question_type")
+  priority     Int
+  question     String
+  answerBasis  String   @map("answer_basis")
+  sourceUrl    String   @map("source_url")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  answer       String?
+  options      Json?
+
+  @@map("questions")
+}
+
+model Job {
+  id                  String     @id @default(uuid())
+  title               String
+  department          String
+  organization        String
+  location            String
+  state               String
+  category            String
+  postDate            String
+  lastDate            String
+  applyByDate         String?
+  qualification       Json
+  totalPosts          String
+  salary              String?
+  ageLimit            String?
+  applicationFee      String?
+  selectionProcess    String?
+  officialPdfUrl      String?
+  sourceUrl           String
+  status              String
+  publicationSource   String?
+  employmentType      String?
+  examProjectedDate   String?
+  expectedResultsDate String?
+  uniqueCapabilities  String?
+  description         String
+  createdAt           DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt           DateTime   @updatedAt @db.Timestamptz(6)
+  savedByUsers        SavedJob[]
+
+  @@map("jobs")
+}
+
+model Plan {
+  id              String         @id @default(uuid()) @db.Uuid
+  key             String         @unique @db.VarChar(100)
+  name            String         @db.VarChar(255)
+  subtitle        String?        @db.VarChar(255)
+  price           Int
+  currency        String         @default("INR") @db.VarChar(3)
+  billingInterval String         @default("monthly") @db.VarChar(20)
+  razorpayPlanId  String?        @db.VarChar(255)
+  badgeText       String?        @db.VarChar(100)
+  badgeType       String?        @db.VarChar(50)
+  theme           String?        @db.VarChar(50)
+  sortOrder       Int            @default(0)
+  isActive        Boolean        @default(true)
+  createdAt       DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
+  payments        Payment[]
+  features        PlanFeature[]
+  subscriptions   Subscription[]
+
+  @@index([sortOrder])
+  @@index([isActive])
+  @@map("plans")
+}
+
+model PlanFeature {
+  id        String   @id @default(uuid()) @db.Uuid
+  planId    String   @db.Uuid
+  text      String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  plan      Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@map("plan_features")
+}
+
+model Subscription {
+  id                     String    @id @default(uuid()) @db.Uuid
+  userId                 String    @db.Uuid
+  planId                 String    @db.Uuid
+  razorpaySubscriptionId String?   @unique @db.VarChar(255)
+  razorpayCustomerId     String?   @db.VarChar(255)
+  status                 String    @default("pending") @db.VarChar(50)
+  currentStart           DateTime? @db.Timestamptz(6)
+  currentEnd             DateTime? @db.Timestamptz(6)
+  cancelAtCycleEnd       Boolean   @default(false)
+  createdAt              DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt              DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  payments               Payment[]
+  plan                   Plan      @relation(fields: [planId], references: [id])
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([planId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+model Payment {
+  id                String       @id @default(uuid()) @db.Uuid
+  userId            String       @db.Uuid
+  subscriptionId    String       @db.Uuid
+  planId            String       @db.Uuid
+  razorpayPaymentId String?      @unique @db.VarChar(255)
+  amount            Int
+  currency          String       @default("INR") @db.VarChar(3)
+  status            String       @default("pending") @db.VarChar(50)
+  method            String?      @db.VarChar(50)
+  rawResponse       Json?
+  createdAt         DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  plan              Plan         @relation(fields: [planId], references: [id])
+  subscription      Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([subscriptionId])
+  @@index([planId])
+  @@map("payments")
+}
+
+model WebhookEvent {
+  id              String    @id @default(uuid()) @db.Uuid
+  razorpayEventId String    @unique @db.VarChar(255)
+  eventType       String    @db.VarChar(100)
+  payload         Json
+  processed       Boolean   @default(false)
+  processedAt     DateTime? @db.Timestamptz(6)
+  createdAt       DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([razorpayEventId])
+  @@index([processed])
+  @@map("webhook_events")
+}
+
+model Consent {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String    @db.Uuid
+  version      String    @db.VarChar(50)
+  audio        Boolean
+  video        Boolean
+  aiProcessing Boolean
+  createdAt    DateTime  @default(now()) @db.Timestamptz(6)
+  revokedAt    DateTime? @db.Timestamptz(6)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("consents")
+}
+
+model Session {
+  id               String          @id @default(uuid()) @db.Uuid
+  userId           String          @db.Uuid
+  examId           String          @db.VarChar(255)
+  topic            String          @db.VarChar(500)
+  mode             String          @db.VarChar(50)
+  level            String          @db.VarChar(50)
+  locale           String          @db.VarChar(20)
+  media            String          @db.VarChar(20)
+  status           String          @default("CREATED") @db.VarChar(50)
+  roomName         String          @unique @db.VarChar(255)
+  startedAt        DateTime?       @db.Timestamptz(6)
+  endedAt          DateTime?       @db.Timestamptz(6)
+  createdAt        DateTime        @default(now()) @db.Timestamptz(6)
+  candidateProfile Json?
+  events           LearningEvent[]
+  feedback         Feedback?
+  recordings       Recording[]
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("interview_sessions")
+}
+
+model LearningEvent {
+  id         String   @id @default(uuid()) @db.Uuid
+  sessionId  String   @db.Uuid
+  type       String   @db.VarChar(100)
+  occurredAt DateTime @db.Timestamptz(6)
+  payload    Json
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, occurredAt])
+  @@map("interview_events")
+}
+
+model Recording {
+  id          String   @id @default(uuid()) @db.Uuid
+  sessionId   String   @db.Uuid
+  objectKey   String
+  kind        String   @db.VarChar(50)
+  durationSec Int?
+  checksum    String?  @db.VarChar(255)
+  expiresAt   DateTime @db.Timestamptz(6)
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  session     Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("interview_recordings")
+}
+
+model Feedback {
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionId    String   @unique @db.Uuid
+  overall      Float
+  dimensions   Json     @db.JsonB
+  strengths    String[] @db.VarChar(500)
+  improvements String[] @db.VarChar(500)
+  nextActions  String[] @db.VarChar(500)
+  transcript   Json?    @db.JsonB
+  safetyFlags  Json?    @db.JsonB
+  modelVersion String   @db.VarChar(100)
+  createdAt    DateTime @default(now()) @db.Timestamptz
+  session      Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("interview_feedback")
+}
+
+model WhatsAppLead {
+  id          String   @id @default(uuid()) @db.Uuid
+  phoneNumber String   @unique @db.VarChar(20)
+  name        String?  @db.VarChar(150)
+  createdAt   DateTime @default(now()) @db.Timestamptz
+  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@map("whatsapp_leads")
+}
+
+model WhatsAppTemplate {
+  id             String   @id @default(uuid()) @db.Uuid
+  name           String   @db.VarChar(255)
+  language       String   @default("en_US") @db.VarChar(12)
+  category       String   @default("UTILITY") @db.VarChar(100)
+  status         String   @default("DRAFT") @db.VarChar(50)
+  bodyComponents Json?    @db.JsonB
+  headerType     String?  @db.VarChar(50)
+  mediaUrl       String?  @db.Text
+  metaTemplateId String?  @db.VarChar(255)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now()) @db.Timestamptz
+  updatedAt      DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  campaigns WhatsAppCampaign[]
+
+  @@index([status])
+  @@index([isActive])
+  @@map("whatsapp_templates")
+}
+
+model WhatsAppCampaign {
+  id             String           @id @default(uuid()) @db.Uuid
+  name           String           @db.VarChar(255)
+  templateId     String           @db.Uuid
+  template       WhatsAppTemplate @relation(fields: [templateId], references: [id])
+  audienceFilter Json?            @db.JsonB
+  scheduledAt    DateTime?        @db.Timestamptz
+  status         String           @default("DRAFT") @db.VarChar(50)
+  totalTargeted  Int              @default(0)
+  totalSent      Int              @default(0)
+  totalFailed    Int              @default(0)
+  createdBy      String           @db.Uuid
+  adminUser      AdminUser        @relation(fields: [createdBy], references: [id])
+  createdAt      DateTime         @default(now()) @db.Timestamptz
+  updatedAt      DateTime         @default(now()) @updatedAt @db.Timestamptz
+
+  @@index([status])
+  @@index([createdBy])
+  @@map("whatsapp_campaigns")
+}
+
+model WhatsAppConversation {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String? @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id])
+
+  waId         String  @db.VarChar(20)
+  contactName  String? @db.VarChar(150)
+  state        String  @default("NEW") @db.VarChar(100)
+  humanHandoff Boolean @default(false)
+
+  context Json? @db.JsonB
+
+  lastInboundAt DateTime? @db.Timestamptz
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  messages WhatsAppMessage[]
+
+  @@unique([waId])
+  @@index([userId])
+  @@index([state])
+  @@index([humanHandoff])
+  @@map("whatsapp_conversations")
+}
+
+model WhatsAppMessage {
+  id                String               @id @default(uuid()) @db.Uuid
+  conversationId    String               @db.Uuid
+  conversation      WhatsAppConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId            String?              @db.Uuid
+  user              User?                @relation(fields: [userId], references: [id])
+  providerMessageId String?              @db.VarChar(255)
+  direction         String               @db.VarChar(20)
+  type              String               @default("text") @db.VarChar(50)
+  body              String?              @db.Text
+  status            String               @default("SENT") @db.VarChar(50)
+  payload           Json?                @db.JsonB
+  createdAt         DateTime             @default(now()) @db.Timestamptz
+
+  @@index([conversationId])
+  @@index([userId])
+  @@index([direction])
+  @@index([createdAt])
+  @@map("whatsapp_messages")
+}
+
+model WhatsAppBotRule {
+  id            String   @id @default(uuid()) @db.Uuid
+  trigger       String   @db.VarChar(100)
+  category      String   @default("COMMAND") @db.VarChar(100)
+  actionType    String   @db.VarChar(50)
+  actionPayload Json?    @db.JsonB
+  priority      Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now()) @db.Timestamptz
+  updatedAt     DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@index([category])
+  @@index([isActive])
+  @@map("whatsapp_bot_rules")
+}
+
+enum TranslationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model SystemSetting {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @unique @db.VarChar(100)
+  value     String   @db.Text
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("system_settings")
+}
+
+// ==========================================
+// QUESTION INTELLIGENCE BOUNDED CONTEXT
+// ==========================================
+
+enum IngestionSourceType {
+  FILE_UPLOAD
+  REMOTE_URL
+}
+
+enum IngestionQuarantineStatus {
+  CLEAN
+  SCANNING
+  QUARANTINED
+  FAILED
+}
+
+enum IngestionSourceStatus {
+  REGISTERED
+  DOWNLOADING
+  EXTRACTING
+  EXTRACTED
+  FAILED
+  ARCHIVED
+}
+
+enum IngestionStage {
+  REGISTRATION
+  MALWARE_SCAN
+  EXTRACTION
+  OCR
+  LAYOUT_RECONSTRUCTION
+  SEGMENTATION
+  CLASSIFICATION
+  DEDUPLICATION
+  VALIDATION
+  COMPLETED
+  FAILED
+}
+
+enum IngestionJobStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  NEEDS_REVIEW
+  FAILED
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  NUMERICAL
+  MATCHING
+  ASSERTION_REASON
+  DESCRIPTIVE
+}
+
+enum DuplicateStatus {
+  UNIQUE
+  EXACT_MATCH
+  NEAR_MATCH
+  TRANSLATED_MATCH
+  CONFLICT_FLAGGED
+}
+
+enum DraftReviewStatus {
+  PENDING_CORRECTION
+  READY_FOR_REVIEW
+  ACCEPTED
+  REJECTED
+  FLAGGED
+}
+
+enum OutboxStatus {
+  PENDING
+  PROCESSING
+  PUBLISHED
+  FAILED
+}
+
+model IngestionSource {
+  id               String                    @id @default(uuid()) @db.Uuid
+  name             String                    @db.VarChar(255)
+  sourceType       IngestionSourceType       @default(FILE_UPLOAD)
+  sourceUrl        String?                   @db.Text
+  fileKey          String?                   @db.VarChar(500)
+  authority        String                    @db.VarChar(255)
+  rights           String                    @default("Public Domain") @db.VarChar(100)
+  checksum         String                    @unique @db.VarChar(64)
+  mimeType         String                    @default("application/pdf") @db.VarChar(100)
+  quarantineStatus IngestionQuarantineStatus @default(CLEAN)
+  examId           String?                   @db.Uuid
+  metadata         Json?                     @db.JsonB
+  extractedText    String?                   @db.Text
+  markdownContent  String?                   @db.Text
+  status           IngestionSourceStatus     @default(REGISTERED)
+  registeredBy     String?                   @db.Uuid
+  createdAt        DateTime                  @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime                  @default(now()) @updatedAt @db.Timestamptz(6)
+
+  exam             Exam?                     @relation(fields: [examId], references: [id])
+  adminUser        AdminUser?                @relation(fields: [registeredBy], references: [id])
+  jobs             IngestionJob[]
+  drafts           QuestionDraft[]
+
+  @@index([authority])
+  @@index([status])
+  @@index([sourceType])
+  @@index([createdAt])
+  @@map("ingestion_sources")
+}
+
+model IngestionJob {
+  id            String             @id @default(uuid()) @db.Uuid
+  sourceId      String             @db.Uuid
+  stage         IngestionStage     @default(REGISTRATION)
+  status        IngestionJobStatus @default(PENDING)
+  parserVersion String?            @db.VarChar(50)
+  modelVersion  String?            @db.VarChar(50)
+  correlationId String?            @db.VarChar(100)
+  progress      Float              @default(0.0)
+  logs          Json?              @db.JsonB
+  error         String?            @db.Text
+  startedAt     DateTime?          @db.Timestamptz(6)
+  completedAt   DateTime?          @db.Timestamptz(6)
+  createdAt     DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+
+  source        IngestionSource    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  drafts        QuestionDraft[]
+
+  @@index([sourceId])
+  @@index([status])
+  @@index([stage])
+  @@map("ingestion_jobs")
+}
+
+model QuestionDraft {
+  id                     String                     @id @default(uuid()) @db.Uuid
+  sourceId               String                     @db.Uuid
+  jobId                  String?                    @db.Uuid
+  itemKey                String                     @db.VarChar(120)
+  pageNumber             Int?
+  boundingBox            Json?                      @db.JsonB
+  nativeContent          Json?                      @db.JsonB
+  passage                String?                    @db.Text
+  questionText           String                     @db.Text
+  questionType           QuestionType               @default(SINGLE_CHOICE)
+  options                Json?                      @db.JsonB
+  answerBasis            String?                    @db.Text
+  correctAnswer          String?                    @db.VarChar(255)
+  academicClassification Json?                      @db.JsonB
+  confidenceScores       Json?                      @db.JsonB
+  duplicateStatus        DuplicateStatus            @default(UNIQUE)
+  duplicateMatchId       String?                    @db.Uuid
+  reviewStatus           DraftReviewStatus          @default(READY_FOR_REVIEW)
+  reviewerNotes          String?                    @db.Text
+  version                Int                        @default(1)
+  createdAt              DateTime                   @default(now()) @db.Timestamptz(6)
+  updatedAt              DateTime                   @default(now()) @updatedAt @db.Timestamptz(6)
+
+  source                 IngestionSource            @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  job                    IngestionJob?              @relation(fields: [jobId], references: [id])
+  revisions              QuestionDraftRevision[]
+  conflicts              QuestionDuplicateConflict[]
+
+  @@unique([sourceId, itemKey])
+  @@index([sourceId])
+  @@index([reviewStatus])
+  @@index([duplicateStatus])
+  @@map("question_drafts")
+}
+
+model QuestionDraftRevision {
+  id           String        @id @default(uuid()) @db.Uuid
+  draftId      String        @db.Uuid
+  version      Int
+  snapshot     Json          @db.JsonB
+  changedBy    String?       @db.Uuid
+  changeReason String?       @db.VarChar(255)
+  createdAt    DateTime      @default(now()) @db.Timestamptz(6)
+
+  draft        QuestionDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@index([draftId, version])
+  @@map("question_draft_revisions")
+}
+
+model QuestionDuplicateConflict {
+  id                String        @id @default(uuid()) @db.Uuid
+  draftId           String        @db.Uuid
+  matchedEntityId   String        @db.Uuid
+  similarityScore   Float
+  matchType         String        @db.VarChar(50)
+  differenceSummary Json?         @db.JsonB
+  resolution        String        @default("UNRESOLVED") @db.VarChar(50)
+  resolvedBy        String?       @db.Uuid
+  resolvedAt        DateTime?     @db.Timestamptz(6)
+  createdAt         DateTime      @default(now()) @db.Timestamptz(6)
+
+  draft             QuestionDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@index([draftId])
+  @@index([resolution])
+  @@map("question_duplicate_conflicts")
+}
+
+model QuestionOutboxEvent {
+  id            String       @id @default(uuid()) @db.Uuid
+  aggregateType String       @default("QUESTION_INTELLIGENCE") @db.VarChar(100)
+  aggregateId   String       @db.Uuid
+  eventType     String       @db.VarChar(100)
+  payload       Json         @db.JsonB
+  status        OutboxStatus @default(PENDING)
+  publishedAt   DateTime?    @db.Timestamptz(6)
+  attempts      Int          @default(0)
+  lastError     String?      @db.Text
+  createdAt     DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@index([status, createdAt])
+  @@index([aggregateId])
+  @@map("question_outbox_events")
+}
+
+model PublishedQuestion {
+  id                   String        @id @default(uuid()) @db.Uuid
+  intelligenceDraftId  String?       @unique @db.Uuid
+  examId               String        @db.Uuid
+  subjectId            String?       @db.Uuid
+  topicId              String?       @db.Uuid
+  language             String        @default("en") @db.VarChar(20)
+  questionText         String        @db.Text
+  questionType         QuestionType  @default(SINGLE_CHOICE)
+  options              Json?         @db.JsonB
+  correctAnswer        String?       @db.VarChar(255)
+  explanation          String?       @db.Text
+  passage              String?       @db.Text
+  bloomLevel           String?       @db.VarChar(50)
+  difficulty           String?       @db.VarChar(50)
+  sourceName           String?       @db.VarChar(255)
+  sourceYear           Int?
+  provenance           Json?         @db.JsonB
+  isActive             Boolean       @default(true)
+  isPublished          Boolean       @default(true)
+  publishedVersion     Int           @default(1)
+  createdAt            DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime      @default(now()) @updatedAt @db.Timestamptz(6)
+
+  exam                 Exam          @relation(fields: [examId], references: [id], onDelete: Cascade)
+  subject              Subject?      @relation(fields: [subjectId], references: [id])
+  topic                Topic?        @relation(fields: [topicId], references: [id])
+
+  @@index([examId])
+  @@index([subjectId])
+  @@index([topicId])
+  @@index([difficulty])
+  @@index([bloomLevel])
+  @@index([isPublished])
+  @@map("published_questions")
+}
+
+model ExamSource {
+  id               String            @id @default(uuid()) @db.Uuid
+  organization     String            @db.VarChar(100)
+  state            String            @default("All India") @db.VarChar(100)
+  category         String            @default("Central Government") @db.VarChar(100)
+  url              String            @db.VarChar(1000)
+  calendarUrl      String?           @db.VarChar(1000)
+  scraperType      String            @default("html") @db.VarChar(50)
+  scraperAdapter   String            @db.VarChar(100)
+  enabled          Boolean           @default(true)
+  lastRunAt        DateTime?         @db.Timestamptz(6)
+  lastSuccessAt    DateTime?         @db.Timestamptz(6)
+  lastFailureAt    DateTime?         @db.Timestamptz(6)
+  lastErrorMessage String?           @db.Text
+  createdAt        DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
+
+  competitiveExams CompetitiveExam[]
+  scrapeLogs       ScrapeLog[]
+
+  @@unique([organization, scraperAdapter])
+  @@index([organization])
+  @@index([state])
+  @@index([enabled])
+  @@map("exam_sources")
+}
+
+model CompetitiveExam {
+  id               String           @id @default(uuid()) @db.Uuid
+  sourceId         String?          @db.Uuid
+  name             String           @db.Text
+  organization     String           @db.VarChar(100)
+  state            String           @default("All India") @db.VarChar(100)
+  category         String           @default("Central Government") @db.VarChar(100)
+  examType         String?          @db.Text
+
+  notificationDate DateTime?        @db.Timestamptz(6)
+  applicationStart DateTime?        @db.Timestamptz(6)
+  applicationEnd   DateTime?        @db.Timestamptz(6)
+
+  examDate         DateTime?        @db.Timestamptz(6)
+  examDateText     String?          @db.Text
+
+  admitCardDate    DateTime?        @db.Timestamptz(6)
+  resultDate       DateTime?        @db.Timestamptz(6)
+
+  status           String           @default("upcoming") @db.VarChar(50)
+  officialUrl      String           @db.Text
+  sourceUrl        String           @db.Text
+  sourceExamId     String           @unique @db.VarChar(255)
+
+  isActive         Boolean          @default(true)
+  lastScrapedAt    DateTime?        @db.Timestamptz(6)
+  createdAt        DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime         @default(now()) @updatedAt @db.Timestamptz(6)
+
+  source           ExamSource?      @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  changeLogs       ExamChangeLog[]
+
+  @@index([organization])
+  @@index([state])
+  @@index([category])
+  @@index([status])
+  @@index([examDate])
+  @@index([isActive])
+  @@map("competitive_exams")
+}
+
+model ScrapeLog {
+  id              String      @id @default(uuid()) @db.Uuid
+  sourceId        String?     @db.Uuid
+  organization    String      @db.VarChar(100)
+  sourceUrl       String      @db.VarChar(1000)
+  startedAt       DateTime    @default(now()) @db.Timestamptz(6)
+  completedAt     DateTime?   @db.Timestamptz(6)
+  durationMs      Int?
+  status          String      @default("RUNNING") @db.VarChar(50)
+  recordsFound    Int         @default(0)
+  recordsInserted Int         @default(0)
+  recordsUpdated  Int         @default(0)
+  errorMessage    String?     @db.Text
+  createdAt       DateTime    @default(now()) @db.Timestamptz(6)
+
+  source          ExamSource? @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@index([organization])
+  @@index([status])
+  @@index([startedAt])
+  @@map("scrape_logs")
+}
+
+model ExamChangeLog {
+  id           String          @id @default(uuid()) @db.Uuid
+  examId       String          @db.Uuid
+  organization String          @db.VarChar(100)
+  examName     String          @db.Text
+  fieldName    String          @db.VarChar(100)
+  oldValue     String?         @db.Text
+  newValue     String?         @db.Text
+  changeSource String?         @db.VarChar(100)
+  changedAt    DateTime        @default(now()) @db.Timestamptz(6)
+
+  exam         CompetitiveExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  @@index([examId])
+  @@index([organization])
+  @@index([changedAt])
+  @@map("exam_change_logs")
+}
+
+model StudyPlan {
+  id        String             @id @default(uuid()) @db.Uuid
+  userId    String             @db.Uuid
+  title     String             @db.Text
+  exam      String?            @db.VarChar(100)
+  status    String             @default("Active") @db.VarChar(50)
+  createdAt DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  StudyPlanMessage[]
+
+  @@index([userId])
+  @@map("study_plans")
+}
+
+model StudyPlanMessage {
+  id          String    @id @default(uuid()) @db.Uuid
+  studyPlanId String    @db.Uuid
+  role        String    @db.VarChar(20) // "user" | "assistant"
+  content     String    @db.Text
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+
+  studyPlan   StudyPlan @relation(fields: [studyPlanId], references: [id], onDelete: Cascade)
+
+  @@index([studyPlanId])
+  @@map("study_plan_messages")
+}
+
+model AiTutorSession {
+  id        String            @id @default(uuid()) @db.Uuid
+  userId    String            @db.Uuid
+  title     String            @db.Text
+  topic     String?           @db.VarChar(100)
+  createdAt DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
+
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  AiTutorMessage[]
+
+  @@index([userId])
+  @@map("ai_tutor_sessions")
+}
+
+model AiTutorMessage {
+  id          String         @id @default(uuid()) @db.Uuid
+  sessionId   String         @db.Uuid
+  role        String         @db.VarChar(20) // "user" | "assistant"
+  content     String         @db.Text
+  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
+
+  session     AiTutorSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("ai_tutor_messages")
+}
+
+// ==========================================
+// MOCK TESTS & ATTEMPTS
+// ==========================================
+
+model MockTest {
+  id             String             @id @default(uuid()) @db.Uuid
+  slug           String             @unique @db.VarChar(255)
+  title          String             @db.VarChar(500)
+  duration       String             @db.VarChar(50) // e.g. "120 mins"
+  questionsCount String             @default("10 Qs") @db.VarChar(50) // e.g. "80 Qs"
+  usersCount     String             @default("1k+ users") @db.VarChar(50) // e.g. "12.4k users"
+  difficulty     String             @default("MEDIUM") @db.VarChar(50) // "EASY" | "MEDIUM" | "HARD"
+  exam           String             @db.VarChar(255) // e.g. "UPSC Civil Services"
+  type           String             @default("mock") @db.VarChar(50) // "mock" | "previous-year"
+  description    String?            @db.Text
+  isActive       Boolean            @default(true)
+  createdAt      DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+
+  questions      MockTestQuestion[]
+  attempts       MockTestAttempt[]
+
+  @@index([exam])
+  @@index([difficulty])
+  @@index([type])
+  @@map("mock_tests")
+}
+
+model MockTestQuestion {
+  id            String   @id @default(uuid()) @db.Uuid
+  testId        String   @db.Uuid
+  orderIndex    Int      @default(0)
+  question      String   @db.Text
+  options       Json     @db.JsonB // Array of { id: "A", text: "..." }
+  correctAnswer String   @db.VarChar(50) // "A" | "B" | "C" | "D"
+  explanation   String?  @db.Text
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+
+  test          MockTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@index([testId])
+  @@map("mock_test_questions")
+}
+
+model MockTestAttempt {
+  id           String    @id @default(uuid()) @db.Uuid
+  testId       String    @db.Uuid
+  userId       String?   @db.Uuid
+  title        String    @db.VarChar(500)
+  exam         String    @db.VarChar(255)
+  score        String    @db.VarChar(50) // e.g. "73%"
+  correct      String    @db.VarChar(50) // e.g. "29/40"
+  status       String    @default("Submitted") @db.VarChar(50)
+  badge        String    @default("AI") @db.VarChar(50)
+  userAnswers  Json      @default("{}") @db.JsonB // { [questionId]: "A" }
+  timeTakenSec Int       @default(0)
+  createdAt    DateTime  @default(now()) @db.Timestamptz(6)
+
+  test         MockTest  @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@index([testId])
+  @@index([userId])
+  @@map("mock_test_attempts")
+}
+
+// ==========================================
+// COMMUNITY & REAL-TIME DISCUSSIONS
+// ==========================================
+
+model CommunityPost {
+  id            String             @id @default(uuid()) @db.Uuid
+  userId        String?            @db.Uuid
+  author        String             @db.VarChar(150)
+  avatarLetter  String             @default("Y") @db.VarChar(5)
+  topic         String             @default("General") @db.VarChar(100)
+  title         String             @db.VarChar(500)
+  content       String             @db.Text
+  likesCount    Int                @default(0)
+  commentsCount Int                @default(0)
+  createdAt     DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+
+  comments      CommunityComment[]
+  likes         CommunityLike[]
+  notifications CommunityNotification[]
+
+  @@index([userId])
+  @@index([topic])
+  @@index([createdAt])
+  @@index([likesCount])
+  @@map("community_posts")
+}
+
+model CommunityComment {
+  id           String        @id @default(uuid()) @db.Uuid
+  postId       String        @db.Uuid
+  userId       String?       @db.Uuid
+  author       String        @db.VarChar(150)
+  avatarLetter String        @default("Y") @db.VarChar(5)
+  content      String        @db.Text
+  createdAt    DateTime      @default(now()) @db.Timestamptz(6)
+
+  post          CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  notifications CommunityNotification[]
+
+  @@index([postId])
+  @@index([createdAt])
+  @@map("community_comments")
+}
+
+model CommunityLike {
+  id        String        @id @default(uuid()) @db.Uuid
+  postId    String        @db.Uuid
+  userId    String?       @db.Uuid
+  ipHash    String?       @db.VarChar(100)
+  createdAt DateTime      @default(now()) @db.Timestamptz(6)
+
+  post      CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@map("community_likes")
+}
+
+model CommunityNotification {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  postId    String   @db.Uuid
+  commentId String   @db.Uuid
+  actorName String   @db.VarChar(150)
+  postTitle String   @db.VarChar(500)
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  post      CommunityPost    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment   CommunityComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+  @@map("community_notifications")
+}
+
+// ==========================================
+// SUPPORT TICKETS & PROBLEM REPORTING
+// ==========================================
+
+enum NotificationChannel {
+  EMAIL
+  WHATSAPP
+  SMS
+  BOTH
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  AWAITING_USER
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  P1
+  P2
+  P3
+  P4
+}
+
+enum TicketSource {
+  CONTACT_FORM
+  PROBLEM_REPORT
+}
+
+model Ticket {
+  id                     String             @id @default(uuid()) @db.Uuid
+  ticketNumber           String             @unique @db.VarChar(50)
+  userId                 String?            @db.Uuid
+  fullName               String             @db.VarChar(255)
+  email                  String             @db.VarChar(255)
+  mobileNumber           String             @db.VarChar(30)
+  persona                String?            @db.VarChar(100)
+  examCategory           String?            @db.VarChar(100)
+  state                  String?            @db.VarChar(100)
+  specificExam           String?            @db.VarChar(100)
+  helpCategory           String             @db.VarChar(150)
+  subject                String             @db.VarChar(255)
+  description            String             @db.Text
+  preferredLanguage      String?            @db.VarChar(50)
+  preferredContactMethod String?            @db.VarChar(50)
+  bestTimeToContact      String?            @db.VarChar(50)
+  consent                Boolean            @default(true)
+  marketingConsent       Boolean            @default(false)
+
+  problemType            String?            @db.VarChar(150)
+  examination            String?            @db.VarChar(255)
+  examSubject            String?            @db.VarChar(255)
+  chapter                String?            @db.VarChar(255)
+  topic                  String?            @db.VarChar(255)
+  questionId             String?            @db.VarChar(100)
+  explanation            String?            @db.Text
+
+  priority               TicketPriority     @default(P3)
+  assignedTeam           String             @default("Customer Support") @db.VarChar(150)
+  status                 TicketStatus       @default(OPEN)
+  source                 TicketSource       @default(CONTACT_FORM)
+
+  attachments            TicketAttachment[]
+  events                 TicketEvent[]
+  notificationLogs       NotificationLog[]
+
+  createdAt              DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt              DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+  resolvedAt             DateTime?          @db.Timestamptz(6)
+  closedAt               DateTime?          @db.Timestamptz(6)
+
+  @@index([ticketNumber])
+  @@index([status])
+  @@index([priority])
+  @@index([assignedTeam])
+  @@map("tickets")
+}
+
+model TicketAttachment {
+  id         String   @id @default(uuid()) @db.Uuid
+  ticketId   String   @db.Uuid
+  ticket     Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  filename   String   @db.VarChar(255)
+  storageKey String   @db.VarChar(500)
+  mimeType   String   @db.VarChar(100)
+  fileSize   Int
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([ticketId])
+  @@map("ticket_attachments")
+}
+
+model TicketEvent {
+  id          String   @id @default(uuid()) @db.Uuid
+  ticketId    String   @db.Uuid
+  ticket      Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  eventType   String   @db.VarChar(100)
+  actorUserId String?  @db.Uuid
+  oldValue    String?  @db.VarChar(255)
+  newValue    String?  @db.VarChar(255)
+  message     String?  @db.Text
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([ticketId])
+  @@map("ticket_events")
+}
+
+model SupportTeam {
+  id                  String              @id @default(uuid()) @db.Uuid
+  teamName            String              @unique @db.VarChar(150)
+  email               String              @db.VarChar(255)
+  whatsappNumber      String              @db.VarChar(30)
+  notificationChannel NotificationChannel @default(BOTH)
+  isActive            Boolean             @default(true)
+  createdAt           DateTime            @default(now()) @db.Timestamptz(6)
+  updatedAt           DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("support_teams")
+}
+
+model NotificationLog {
+  id                String              @id @default(uuid()) @db.Uuid
+  ticketId          String              @db.Uuid
+  ticket            Ticket              @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  channel           NotificationChannel
+  recipient         String              @db.VarChar(255)
+  status            String              @db.VarChar(50)
+  providerMessageId String?             @db.VarChar(255)
+  attemptCount      Int                 @default(1)
+  errorMessage      String?             @db.Text
+  sentAt            DateTime?           @db.Timestamptz(6)
+  createdAt         DateTime            @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@index([ticketId])
+  @@index([status])
+  @@map("notification_logs")
+}

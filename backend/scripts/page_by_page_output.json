@@ -1,0 +1,128 @@
+[
+  {
+    "number": 1,
+    "english": {
+      "question": "Which one of the following Carnatic music ragas is similar to Raga Bilawal in Hindustani music ?",
+      "options": {
+        "a": "Nat Bhairavi",
+        "b": "Kamavardhini",
+        "c": "Hanumatodi",
+        "d": "Dheera Shankarabharanam"
+      }
+    },
+    "hindi": {
+      "question": "निम्नलिखित में से कर्नाटिक संगीत के किस राग का हिन्ुस्तानी संगीत के राग बिलावल से मेल है?",
+      "options": {
+        "a": "नट भैरवी",
+        "b": "कामवर्धिनी",
+        "c": "हनुमतोड़ी",
+        "d": "धीर शंकराभरणम्"
+      }
+    }
+  },
+  {
+    "number": 2,
+    "english": {
+      "question": "The artificially fixed rupee-sterling exchange rate prescribed by the Hilton-Young Commission (1926) was adopted by the British Government for which one of the following reasons?",
+      "options": {
+        "a": "Aiding the flow of remittances from India andmaintaining India's creditworthiness",
+        "b": "Providing support to Indian importers",
+        "c": "Encouraging export of cotton produce",
+        "d": "Preventing depreciation of the Rupee in"
+      }
+    },
+    "hindi": {
+      "question": "हिल्टन-यंग कमीशन (1926) द्वारा कृत्िम रूप से निधारिति की गई रूपए-स्टलिंग विनिमय दर को ब्रिटिश सरकारद्वारा निम्नलिखित में से किस कारण से अंगीकार किया गया था ?",
+      "options": {
+        "a": "भारत से प्रेषित धन के प्रवाह में सहायता देने और भारत की ऋणपात्रता (creditworthiness) को बनाए रखने के लिए",
+        "b": "भारतीय आयातकों को समर्थन देने के लिए",
+        "c": "भारत से कपास उपज के निर्यात को बढ़ावा देने के",
+        "d": "स्वर्ण के सापेक्ष रूपए के मूल्यहास को रोकने के लिए"
+      }
+    }
+  },
+  {
+    "number": 3,
+    "english": {
+      "question": "Consider the following statements : I. Pali texts contain the first definite references to coins, e.g., kahapana, nikkha, kamsa, and kakanika. II. The literary evidence from Pali texts is corroborated by archaeological evidence of punch-marked coins from many sites, most of them made of silver. The above statements have been associated 6. with which of the following ? 1. Emergence of urban life 2. Transition to money economy Select the answer using the code given below :",
+      "options": {
+        "a": "1 only",
+        "b": "2 only",
+        "c": "Both 1 and 2",
+        "d": "Neither 1 nor 2"
+      }
+    },
+    "hindi": {
+      "question": "निम्नलिखित कथनों पर विचार कीजिए: पाली ग्रंथों में, कहापण, निक्खा, कन्स और काकणिका जैसे सिक्कों के प्रथम स्पृ् संदर्भ समाविष्टहैं। पाली ग्रथों से प्रा्त साहित्िक साक्ष्य की पुष्ट, अनेक स्थलों से प्रा्त आहत सिक्कों (punch-marked coins) के पुरातात्विक प्रमाण द्वारा होती है, इन सिक्कों में से अधिकांश चाँदी से बने हैं। उपर्यक्त कथन निम्नलिखित मे े किनसे संबद्ध हैं? 1 शहरी जीवन के उद्वव से मुद्रा अर्थव्यवस्था कीओर संक्रमण से नीचे दिए गए कूट का प्रयोग कर उत्तर चुनिए:",
+      "options": {
+        "a": "केवल1",
+        "b": "केवल 2",
+        "c": "1 और 2 दोनों",
+        "d": "न तो 1, न ही 2"
+      }
+    }
+  },
+  {
+    "number": 4,
+    "english": {
+      "question": "Which of the following temples has/have a Nagara-style shikhara ? 1. Malegitti Shivalaya, Badami 2. Huchimalligudi Temple, Aihole 3. Dashavatara Temple, Deogarh Virupaksha Temple, Pattadakal Select the answer using the code given below :",
+      "options": {
+        "a": "1and 2",
+        "b": "2 and 3",
+        "c": "3 only",
+        "d": "3 and 4"
+      }
+    },
+    "hindi": {
+      "question": "निम्नलिखित में से किस मंदिर/किन मंदिरों में नागर-शैली के शिखर हैं? 1मालेगिटी शिवालय, बादामी 2. हचिमल्लगड़ी मंदिर, ऐहोल दशावतार मंदिर, देवगढ़ 4विरुपाक्ष मंदिर, प्ृदकल नीचे दिए गए कूट का प्रयोग कर उत्तर चुनिए:",
+      "options": {
+        "a": "1 और 2",
+        "b": "2 और 3",
+        "c": "केवल 3",
+        "d": "3 और 4"
+      }
+    }
+  },
+  {
+    "number": 5,
+    "english": {
+      "question": "Among the four main forms of existence of life recognized in Jainism, which one of the following is not included ?",
+      "options": {
+        "a": "Deva (gods) (b Yaksha (demi-gods)",
+        "b": "",
+        "c": "Manushya (humans)",
+        "d": "Tiryancha (animals and plants)"
+      }
+    },
+    "hindi": {
+      "question": "जैन धर्म में मान्यता-प्रस् जीवन के अस्त्व के चार मुख्य रूपों में, निम्नलिखित में से कौन-सा सम्मिलित नहीं है",
+      "options": {
+        "a": "देव (ईश्वर)",
+        "b": "यक्ष (अर्देव)",
+        "c": "मनुष्य (मानव)",
+        "d": "तिर्यच (पशु और पादप)"
+      }
+    }
+  },
+  {
+    "number": 6,
+    "english": {
+      "question": "The Hallisalasya painting in the Bagh Caves represents :",
+      "options": {
+        "a": "A joyous folk dance",
+        "b": "Buddha in a meditative pose",
+        "c": "The depiction of Shiva and Parvati on",
+        "d": "Samudramanthan (Churning of the"
+      }
+    },
+    "hindi": {
+      "question": "बाघ गुफाओं में विदधयमान हल्लसालस्य चित्र क्या प्रदर्शित करता है?",
+      "options": {
+        "a": "एक आनंदमय लोकनृत्य",
+        "b": "चिंतनशील मुद्र में बुद्ध",
+        "c": "कैलाश पर शिव और पार्वती का चित्रण",
+        "d": "समुद्मंथन (समुद्रका मंथन)"
+      }
+    }
+  }
+]

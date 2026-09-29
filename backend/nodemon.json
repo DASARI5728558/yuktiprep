@@ -1,0 +1,12 @@
+{
+  "watch": ["src", "controllers", "routes", "services", "config"],
+  "ext": "js,json",
+  "ignore": [
+    "uploads/*",
+    "uploads/**/*",
+    "scripts/*.json",
+    "scripts/*.txt",
+    "scripts/*.png",
+    "temp/*"
+  ]
+}

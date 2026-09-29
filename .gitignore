@@ -1,0 +1,130 @@
+# ==============================================================================
+# Root .gitignore for Yuktiprep Monorepo / Multi-project Workspace
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Operating System & IDE Files
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# Editors & IDEs
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.swo
+*~
+
+# ------------------------------------------------------------------------------
+# Dependencies & Package Managers
+# ------------------------------------------------------------------------------
+node_modules/
+**/node_modules/
+.pnp
+.pnp.js
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ------------------------------------------------------------------------------
+# Environment Variables & Secrets (Keep private data safe)
+# ------------------------------------------------------------------------------
+.env
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+**/.env*.local
+*.pem
+*.key
+*.cert
+*.crt
+
+# ------------------------------------------------------------------------------
+# Logs & Debugging
+# ------------------------------------------------------------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# ------------------------------------------------------------------------------
+# Next.js / React Web & Client Builds
+# ------------------------------------------------------------------------------
+.next/
+**/.next/
+out/
+**/out/
+build/
+**/build/
+dist/
+**/dist/
+.vercel
+**/.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# ------------------------------------------------------------------------------
+# Testing & Coverage
+# ------------------------------------------------------------------------------
+coverage/
+**/coverage/
+.nyc_output/
+
+# ------------------------------------------------------------------------------
+# Backend & Database
+# ------------------------------------------------------------------------------
+/src/generated/prisma
+**/src/generated/prisma
+backend/uploads/
+uploads/
+**/uploads/
+
+# ------------------------------------------------------------------------------
+# Mobile / Android / iOS / Capacitor
+# ------------------------------------------------------------------------------
+**/android/.gradle/
+**/android/app/build/
+**/android/build/
+**/android/captures/
+**/android/.cxx/
+**/android/local.properties
+**/android/*.iml
+**/android/app/*.iml
+
+# ------------------------------------------------------------------------------
+# Temporary & Cache
+# ------------------------------------------------------------------------------
+.cache/
+**/.cache/
+.turbo/
+**/.turbo/
+.temp/
+.tmp/
+scratch/
+
+
+yuktiprep-whatsapp-api/
+*.md
+
+backend/scripts/.venv-paddle
+backend/scripts/__pycache__

@@ -1,0 +1,149 @@
+[
+  {
+    "number": 1,
+    "english": {
+      "question": "Which of the following is NOT part of 'four stage' disaster management approach?",
+      "options": {
+        "a": "Preparation",
+        "b": "Recovery",
+        "c": "Alertness",
+        "d": "Mitigation"
+      }
+    },
+    "hindi": {
+      "question": "निम्न में से कौन 'चार चरणों वाले' आपदा प्रबंन उपागम का हिस्सा नहीं है?",
+      "options": {
+        "a": "तैयारी",
+        "b": "रिकवरी",
+        "c": "सतर्कता",
+        "d": "निवारण"
+      }
+    }
+  },
+  {
+    "number": 2,
+    "english": {
+      "question": "The backward jerk felt, when a gun is fired, is example of",
+      "options": {
+        "a": "Newton's second law of motion",
+        "b": "Newton's third law of motion",
+        "c": "Newton's first law of motion",
+        "d": "None of these"
+      }
+    },
+    "hindi": {
+      "question": "बन्दूक की गोली छोड़ते है, तो पीछे की ओर झटका लगता है, उदाहरण है",
+      "options": {
+        "a": "न्यूटन की गति के द्रितीय नियम का",
+        "b": "न्यूटन की गति के तृतीय नियम का (८) न्यूटन की गति के प्रथम नियम का",
+        "c": "",
+        "d": "इनमें से कोई नहीं"
+      }
+    }
+  },
+  {
+    "number": 3,
+    "english": {
+      "question": "Which country leads in terms of area of lands under organic farming?",
+      "options": {
+        "a": "Germany",
+        "b": "China",
+        "c": "India",
+        "d": "Australia"
+      }
+    },
+    "hindi": {
+      "question": "जैविक खेती के तहत भूमि क्षेत्रफल के संदर्भ में कौन-सा देश सबसे आगे है ?",
+      "options": {
+        "a": "जर्मनी",
+        "b": "चीन 050 TA",
+        "c": "भारत",
+        "d": "ऑस्ट्रेलिया"
+      }
+    }
+  },
+  {
+    "number": 4,
+    "english": {
+      "question": "What majority is required in Parliament for the creation of new States in India?",
+      "options": {
+        "a": "A two-third majority and the support of half of the States",
+        "b": "Support from the State from which new State is being created, with two-third majority",
+        "c": "Simple majority",
+        "d": "A two-third majority"
+      }
+    },
+    "hindi": {
+      "question": "भारत में नए राज्यों के निर्माण हेतु संसद में कौन-सी बहुमत की आवश्यकता पडती है ?",
+      "options": {
+        "a": "2/3 बहमत के साथ आधे राज्यों का समर्थन",
+        "b": "2/3 बहमत के साथ उस राज्य का समर्थन जिससे नया राज्य बनाया जा रहा है",
+        "c": "साधारण बहुमत",
+        "d": "2/3 बहुमत"
+      }
+    }
+  },
+  {
+    "number": 5,
+    "english": {
+      "question": "Who gave the title of Nadr-e-Zaman'to Saint Siddhi Chandra Jain ?",
+      "options": {
+        "a": "Shahjahan",
+        "b": "Humayun",
+        "c": "Akbar",
+        "d": "Jahangir"
+      }
+    },
+    "hindi": {
+      "question": "5संत सिद्धिचंद्रजैन को किसने नादिरे-जमां की उपाधि दी ?",
+      "options": {
+        "a": "शाहजहाँ",
+        "b": "हुमायू",
+        "c": "अकबर",
+        "d": "जहॉगीर"
+      }
+    }
+  },
+  {
+    "number": 6,
+    "english": {
+      "question": "When did the U.P. Government start the 'Zero Poverty Campaign'?",
+      "options": {
+        "a": "15 August 2024",
+        "b": "02 October 2024",
+        "c": "15 August 2022",
+        "d": "02 October 2023"
+      }
+    },
+    "hindi": {
+      "question": "उत्तर प्रेश सरकार द्रा 'शून्य गरीबी अभियान' कब शुरू किया गया था ?",
+      "options": {
+        "a": "15 अगस्त 2024",
+        "b": "02 अक्टूबर 2024",
+        "c": "15 अगस्त 2022",
+        "d": "02 अक्टूबर 2023"
+      }
+    }
+  },
+  {
+    "number": 7,
+    "english": {
+      "question": "Which of the following has a broader scope?",
+      "options": {
+        "a": "Internal audit",
+        "b": "Quality control",
+        "c": "Internal control",
+        "d": "Internal checking"
+      }
+    },
+    "hindi": {
+      "question": "निम्नलिखित में से किसका दायरा व्यापक है?",
+      "options": {
+        "a": "आन्तरिक लेखा परीक्षा",
+        "b": "गुणव्ता नियंत्रण",
+        "c": "आन्तरिक नियंत्रण",
+        "d": "आन्तरिक जाँच"
+      }
+    }
+  }
+]

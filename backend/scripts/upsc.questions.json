@@ -1,0 +1,135 @@
+[
+  {
+    "number": 1,
+    "hindi": {
+      "number": 1,
+      "question": "'four stage' disaster management",
+      "options": {
+        "a": "Preparation",
+        "b": "Recovery",
+        "c": "Alertness The backward jerk felt, when a gun is fired,",
+        "d": "Mitigation"
+      }
+    },
+    "english": {
+      "number": 1,
+      "question": "उपागम का हिस्सा नहीं है ?",
+      "options": {
+        "a": "() भारत भारत में नए राज्यों के नि्माण हेत संसद में कौन-सी",
+        "b": "चीन",
+        "c": "सतर्कता 2. बन्दूक की गोली छोड़ते हैं, तो पीछे की ओर झटका लगता है, उदाहरण है",
+        "d": "ऑस्ट्रेलिया"
+      }
+    }
+  },
+  {
+    "number": 2,
+    "hindi": {
+      "number": 2,
+      "question": "is example of",
+      "options": {
+        "a": "Newton's second law of motion",
+        "b": "Newton's third law of motion",
+        "c": "Newton's first law of motion",
+        "d": "None of these Which country leads in terms of area of"
+      }
+    },
+    "english": null
+  },
+  {
+    "number": 3,
+    "hindi": {
+      "number": 3,
+      "question": "lands under organic farming?",
+      "options": {
+        "a": "Germany",
+        "b": "China",
+        "c": "India",
+        "d": "Australia What majority is required in Parliament"
+      }
+    },
+    "english": null
+  },
+  {
+    "number": 4,
+    "hindi": {
+      "number": 4,
+      "question": "for the creation of new States in India?",
+      "options": {
+        "a": "A two-third majority and the support of half of the States",
+        "b": "Support from the State from which new State is being created, with two-third majority",
+        "c": "Simple majority",
+        "d": "A two-third majority Who gave the title of Nadr-e-Zaman'to"
+      }
+    },
+    "english": {
+      "number": 4,
+      "question": "बहुमत की आवश्यकता पडती है?",
+      "options": {
+        "a": "2/3 बहमत के साथ आधे राज्यों का समर्थन",
+        "b": "2/3 बहुमत के साथ उस राज्य का समर्थन जिससे नया राज्य बनाया जा रहा है",
+        "c": "साधारण बहुमत",
+        "d": "2/3 बहुमत संत सिद्धि चंद्र जैन को किसने 'नादिरे-जमां की"
+      }
+    }
+  },
+  {
+    "number": 5,
+    "hindi": {
+      "number": 5,
+      "question": "Saint Siddhi Chandra Jain ?",
+      "options": {
+        "a": "Shahjahan",
+        "b": "Humayun",
+        "c": "Akbar When did the U.P. Government start the",
+        "d": "Jahangir"
+      }
+    },
+    "english": {
+      "number": 5,
+      "question": "उपाधि दी ?",
+      "options": {
+        "a": "15 अगस्त 2024",
+        "b": "02 अक्टूबर 2024",
+        "c": "15 अगस्त 2022",
+        "d": "02 अक्टूबर 2023 निम्नलिखित में से किसका दायरा व्यापक है?"
+      }
+    }
+  },
+  {
+    "number": 6,
+    "hindi": {
+      "number": 6,
+      "question": "Zero Poverty Campaign'?C",
+      "options": {
+        "a": "15 August 2024",
+        "b": "02 October 2024",
+        "c": "15 August 2022",
+        "d": "02 October 2023 Which of the following has a broader scope?"
+      }
+    },
+    "english": null
+  },
+  {
+    "number": 7,
+    "hindi": {
+      "number": 7,
+      "question": "",
+      "options": {
+        "a": "Internal audit",
+        "b": "Quality control",
+        "c": "Internal control",
+        "d": "Internal checking"
+      }
+    },
+    "english": {
+      "number": 7,
+      "question": "",
+      "options": {
+        "a": "आन्तरिक लेखा परीक्षा",
+        "b": "गुणवत्ता नियंत्रण () आन्तरिक नियंत्रण",
+        "d": "आन्तरिक जॉँच"
+      }
+    }
+  }
+]

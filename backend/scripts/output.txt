@@ -1,0 +1,119 @@
+=== Question 1 ===
+[English]
+Q: Which of the following is NOT part of 'four stage' disaster management approach?
+  (a) Preparation
+  (b) Recovery
+  (c) Alertness
+  (d) Mitigation
+
+[Hindi]
+Q: निम्न में से कौन 'चार चरणों वाले' आपदा प्रबंधन उपागम का हिस्सा नहीं है ?
+  (a) तैयारी
+  (b) रिकवरी
+  (c) सतर्कता
+  (d) निवारण
+
+=============================================
+
+=== Question 2 ===
+[English]
+Q: The backward jerk felt, when a gun is fired, is example of
+  (a) Newton's second law of motion
+  (b) Newton's third law of motion
+  (c) Newton's first law of motion
+  (d) None of these
+
+[Hindi]
+Q: बन्दूक की गोली छोड़ते हैं, तो पीछे की ओर झटका लगता है, उदाहरण है
+  (a) न्यूटन की गति के द्रितीय नियम का
+  (b) न्यूटन की गति के तृतीय नियम का
+  (c) न्यूटन की गति के प्रथम नियम का
+  (d) इनमें से कोई नहीं
+
+=============================================
+
+=== Question 3 ===
+[English]
+Q: Which country leads in terms of area of lands under organic farming?
+  (a) Germany
+  (b) China
+  (c) India
+  (d) Australia
+
+[Hindi]
+Q: जैविक खेती के तहत भूमि क्षत्रफल के संदर्भ में कौन-सा देश सबसे आगे है ?
+  (a) जर्मनी
+  (b) चीन
+  (c) भारत
+  (d) ऑस्ट्रेलिया A
+
+=============================================
+
+=== Question 4 ===
+[English]
+Q: What majority is required in Parliament for the creation of new States in India?
+  (a) A two-third majority and the support of half of the States
+  (b) Support from the State from which new State is being created, with two-third majority
+  (c) Simple majority
+  (d) A two-third majority
+
+[Hindi]
+Q: भारत में नए राज्यों के नि्माण हेत संसद में कौन-सी बहुमत की आवश्यकता पडती है?
+  (a) 2/3 बहमत के साथ आधे राज्यों का समर्थन
+  (b) 2/3 बहुमत के साथ उस राज्य का समर्थन जिससे नया राज्य बनाया जा रहा है
+  (c) साधारण बहुमत
+  (d) 2/3 बहुमत
+
+=============================================
+
+=== Question 5 ===
+[English]
+Q: Who gave the title of Nadr-e-Zaman'to Saint Siddhi Chandra Jain ?
+  (a) Shahjahan
+  (b) Humayun
+  (c) Akbar
+  (d) Jahangir
+
+[Hindi]
+Q: संत सिद्धि चंद्र जैन को किसने 'नादिरे-जमां की उपाधि दी ?
+  (a) शाहजहाँ
+  (b) हुमायू
+  (c) अकबर
+  (d) जहॉगीर
+
+=============================================
+
+=== Question 6 ===
+[English]
+Q: When did the U.P. Government start the Zero Poverty Campaign'?C
+  (a) 15 August 2024
+  (b) 02 October 2024
+  (c) 15 August 2022
+  (d) 02 October 2023
+
+[Hindi]
+Q: उत्तर प्रदेश सरकार द्वारा 'शून्य गरीबी अभियान' कब शुरू किया गया था ?
+  (a) 15 अगस्त 2024
+  (b) 02 अक्टूबर 2024
+  (c) 15 अगस्त 2022
+  (d) 02 अक्टूबर 2023
+
+=============================================
+
+=== Question 7 ===
+[English]
+Q: Which of the following has a broader scope?
+  (a) Internal audit
+  (b) Quality control
+  (c) Internal control
+  (d) Internal checking
+
+[Hindi]
+Q: निम्नलिखित में से किसका दायरा व्यापक है?
+  (a) आन्तरिक लेखा परीक्षा
+  (b) गुणवत्ता नियंत्रण
+  (c) आन्तरिक नियंत्रण
+  (d) आन्तरिक जॉँच
+
+=============================================
+
