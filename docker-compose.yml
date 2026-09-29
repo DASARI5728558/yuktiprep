@@ -1,8 +1,6 @@
 services:
   nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
+    image: ${REGISTRY}/${NAMESPACE}/myapp-nginx:${TAG}
     container_name: yuktiprep-nginx
     restart: unless-stopped
     ports:
@@ -17,13 +15,11 @@ services:
       - yukti-network
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: ${REGISTRY}/${NAMESPACE}/myapp-backend:${TAG}
     container_name: yuktiprep-backend
     restart: unless-stopped
     env_file:
-      - ./backend/.env
+      - ./backend/.env          
     environment:
       - PORT=4000
       - NODE_ENV=production
@@ -38,51 +34,36 @@ services:
       - yukti-network
 
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_BACKEND_URL: http://ba.yuktiprep.com
+    image: ${REGISTRY}/${NAMESPACE}/myapp-client:${TAG}
     container_name: yuktiprep-client
     restart: unless-stopped
     environment:
       - PORT=3000
       - NODE_ENV=production
-      - NEXT_PUBLIC_BACKEND_URL=http://ba.yuktiprep.com
     expose:
       - "3000"
     networks:
       - yukti-network
 
   web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_BACKEND_URL: http://ba.yuktiprep.com
+    image: ${REGISTRY}/${NAMESPACE}/myapp-web:${TAG}
     container_name: yuktiprep-web
     restart: unless-stopped
     environment:
       - PORT=5001
       - NODE_ENV=production
-      - NEXT_PUBLIC_BACKEND_URL=http://ba.yuktiprep.com
     expose:
       - "5001"
     networks:
       - yukti-network
 
   admin:
-    build:
-      context: ./admin
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: http://ba.yuktiprep.com
+    image: ${REGISTRY}/${NAMESPACE}/myapp-admin:${TAG}
     container_name: yuktiprep-admin
     restart: unless-stopped
     environment:
       - PORT=5000
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://ba.yuktiprep.com
     expose:
       - "5000"
     networks:
@@ -94,7 +75,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env on the VM}
       POSTGRES_DB: ${POSTGRES_DB:-yuktiprep}
     volumes:
       - postgres_data:/var/lib/postgresql/data
