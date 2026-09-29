@@ -14,6 +14,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
+# Passed at build time by the pipeline (baked into the client-side bundle)
 ARG NEXT_PUBLIC_BACKEND_URL=http://ba.yuktiprep.com
 ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
 
@@ -21,6 +22,10 @@ RUN npm run build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
+
+# Release identity: the pipeline passes the git SHA; /api/version returns it
+ARG GIT_SHA=unknown
+ENV GIT_SHA=$GIT_SHA
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
